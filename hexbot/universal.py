@@ -101,6 +101,28 @@ def callback_opencv(data):
 		bridge = CvBridge()
 		cv_image = bridge.imgmsg_to_cv2(data, "bgr8")
 		centrefinding(cv_image)
+'''	elif command=='torus_search':
+		bridge = CvBridge()
+		cv_image = bridge.imgmsg_to_cv2(data, "bgr8")
+		ml_torus_identification_model(cv_image)
+		
+def pickup():
+	global command
+	if ml_torus_identification_model() == 1:
+		arm_pickup_mechanism_and_put_on_bot_body()
+	else:
+		command='torus_search'
+		callback_opencv(data)
+def see_tag_and_put():
+	global command
+	pick_up_from_bot()
+	cv_to_detect_color()
+	if cv_to_detect_color == ml_tag_label():
+		put_in_rod()
+	else:
+		go_front(value)
+		continue
+		'''
 
 
 def main():
@@ -113,6 +135,9 @@ def main():
 	velocity_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 	sub_laser_front = rospy.Subscriber('/hexbot/laser/scan', LaserScan , callback_frontlaser)
 	image_sub = rospy.Subscriber("/hexbot/camera1/image_raw",Image,callback_opencv)
+	#image_sub2 = rospy.Subscriber("/hexbot/camera1/image_raw",Image, pickup)
+	#image_sub3 = rospy.Subscriber("/hexbot/camera1/image_raw",Image, see_tag_and_put)
+
 	
 	rospy.spin()
 
