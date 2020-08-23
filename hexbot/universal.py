@@ -100,7 +100,7 @@ def load(img_name):
 	#img_new=img_new.reshape(h,b,1)
 	return img_new
 	#if using solid work images and want to crop out some stuff
-def cv_to_detect_color():
+def cv_to_detect_shape_color():
 	img=load('cyan.png')
 	#Otherwise
 	#img=cv2.imread('b.png')
@@ -164,8 +164,7 @@ def cv_to_detect_color():
 			for i in range(5) :
 				if hue_values[i]-5<=hue<=hue_values[i]+5 :
 					color=colors[i]
-	print(shape)
-	print(color)
+	return shape, color
 	cv2.imshow('frame',img)
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
@@ -181,7 +180,7 @@ def callback_opencv(data):
 '''	elif command=='torus_search':
 		bridge = CvBridge()
 		cv_image = bridge.imgmsg_to_cv2(data, "bgr8")
-		ml_torus_identification_model(cv_image)
+		cv_to_detect_shape_color()[0]
 		
 def pickup():
 	global command
@@ -194,7 +193,7 @@ def see_tag_and_put():
 	global command
 	pick_up_from_bot()
 	cv_to_detect_color()
-	if cv_to_detect_color == ml_tag_label():
+	if cv_to_detect_shape_color()[1] == ml_tag_label():
 		put_in_rod()
 	else:
 		go_front(value)
